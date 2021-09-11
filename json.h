@@ -255,21 +255,34 @@ typedef struct _json_value
 
 } json_value;
 
+#ifdef _MSC_VER
+__declspec(dllexport)
+#endif
 json_value * json_parse (const json_char * json,
                          size_t length);
 
 #define json_error_max 128
+
+#ifdef _MSC_VER
+__declspec(dllexport)
+#endif
 json_value * json_parse_ex (json_settings * settings,
                             const json_char * json,
                             size_t length,
                             char * error);
 
+#ifdef _MSC_VER
+__declspec(dllexport)
+#endif
 void json_value_free (json_value *);
 
 
 /* Not usually necessary, unless you used a custom mem_alloc and now want to
  * use a custom mem_free.
  */
+#ifdef _MSC_VER
+__declspec(dllexport)
+#endif
 void json_value_free_ex (json_settings * settings,
                          json_value *);
 

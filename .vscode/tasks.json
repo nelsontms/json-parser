@@ -1,0 +1,82 @@
+{
+    "version": "2.0.0",
+    "windows": {
+        "options": {
+            "shell": {
+                "executable": "cmd.exe",
+                "args": [
+                    "/C",
+                    "\"C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Auxiliary/Build/vcvars32.bat\"",
+                    "&&"
+                ]
+            }
+        }
+    },
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "build",
+            "command": "cl.exe",
+            "args": [
+                "/permissive-",
+                "/Zc:preprocessor",
+                "/Zc:throwingNew",
+                "/volatile:iso",
+                "/utf-8",
+                "/Qspectre",
+                "/Wall",
+                "/nologo",
+                "/D_USRDLL",
+                "/Za",
+                "/Zi",
+                "/EHsc",
+                "/Gd",
+                "/LD",
+                "/Fm:${workspaceFolder}\\obj\\",
+                "/Fo:${workspaceFolder}\\obj\\",
+                "/Fd:${workspaceFolder}\\JsonParser.pdb",
+                "/Fe:${workspaceFolder}\\obj\\json.dll",
+                "${workspaceFolder}\\json.c"
+            ],
+            "problemMatcher": [
+                "$msCompile"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "type": "shell",
+            "label": "build-test",
+            "command": "cl.exe",
+            "args": [
+                "/permissive-",
+                "/Zc:preprocessor",
+                "/Zc:throwingNew",
+                "/volatile:iso",
+                "/utf-8",
+                "/Wall",
+                "/nologo",
+                "/Za",
+                "/Zi",
+                "/EHsc",
+                "/Fm:${workspaceFolder}\\examples\\obj\\",
+                "/Fo:${workspaceFolder}\\examples\\obj\\",
+                "/Fd:${workspaceFolder}\\examples\\test_json_prj.pdb",
+                "/Fe:${workspaceFolder}\\examples\\obj\\test_json.exe",
+                "${workspaceFolder}\\examples\\test_json.c",
+                "/link",
+                "/LIBPATH:${workspaceFolder}\\obj",
+                "json.lib"
+            ],
+            "problemMatcher": [
+                "$msCompile"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}

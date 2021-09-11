@@ -1,0 +1,13 @@
+{
+    "env": {
+
+    },
+    "configurations": [
+        {
+            "name": "windows",
+            "intelliSenseMode": "msvc-x86",
+            "defines": ["MSVCX86", "X86"]
+        }
+    ],
+    "version": 4
+}
