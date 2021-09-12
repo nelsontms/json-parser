@@ -56,19 +56,14 @@
                 "/Zc:throwingNew",
                 "/volatile:iso",
                 "/utf-8",
-                "/Wall",
                 "/nologo",
-                "/Za",
                 "/Zi",
                 "/EHsc",
                 "/Fm:${workspaceFolder}\\examples\\obj\\",
                 "/Fo:${workspaceFolder}\\examples\\obj\\",
                 "/Fd:${workspaceFolder}\\examples\\test_json_prj.pdb",
                 "/Fe:${workspaceFolder}\\examples\\obj\\test_json.exe",
-                "${workspaceFolder}\\examples\\test_json.c",
-                "/link",
-                "/LIBPATH:${workspaceFolder}\\obj",
-                "json.lib"
+                "${workspaceFolder}\\examples\\test_json.c"
             ],
             "problemMatcher": [
                 "$msCompile"

@@ -1,6 +1,10 @@
 {
     "files.associations": {
         "stat.h": "c",
-        "corecrt.h": "c"
+        "corecrt.h": "c",
+        "windef.h": "c",
+        "libloaderapi.h": "c",
+        "winnt.h": "c",
+        "windows.h": "c"
     }
 }

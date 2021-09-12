@@ -27,11 +27,14 @@
  * SUCH DAMAGE.
  */
 
-#include "json.h"
-
+#include <Windows.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
+#include "json.h"
+
+typedef json_value* (* JPARSER) (const json_char *, size_t);
+typedef void (*JFREE) (json_value *);
 
 /*
  * Test for json.c
@@ -123,10 +126,31 @@ int main(int argc, char** argv)
         char* filename;
         FILE *fp;
         struct stat filestatus;
-        int file_size;
+        size_t file_size;
         char* file_contents;
         json_char* json;
         json_value* value;
+        size_t actread;
+        HINSTANCE jlib;
+        JPARSER jparse;
+        JFREE jfree;
+
+        jlib = LoadLibrary("json.dll");
+
+        if (!jlib) {
+                fprintf(stderr, "Loading error: unable to load %s\n", "json.dll");
+                return 1;
+        }
+        jparse = (JPARSER) GetProcAddress(jlib, "json_parse");
+        if (!jparse) {
+                fprintf(stderr, "Loading error: unable to load %s\n", "json_parse");
+                return 1;
+        }
+        jfree  = (JFREE) GetProcAddress(jlib, "json_value_free");
+        if (!jfree) {
+                fprintf(stderr, "Loading error: unable to load %s\n", "json_value_free");
+                return 1;
+        }
 
         if (argc != 2) {
                 fprintf(stderr, "%s <file_json>\n", argv[0]);
@@ -139,11 +163,12 @@ int main(int argc, char** argv)
                 return 1;
         }
         file_size = filestatus.st_size;
-        file_contents = (char*)malloc(filestatus.st_size);
+        file_contents = (char*) malloc(filestatus.st_size + 1);
         if ( file_contents == NULL) {
                 fprintf(stderr, "Memory error: unable to allocate %d bytes\n", file_size);
                 return 1;
         }
+        file_contents[file_size] = 0;
 
         fp = fopen(filename, "rt");
         if (fp == NULL) {
@@ -152,12 +177,15 @@ int main(int argc, char** argv)
                 free(file_contents);
                 return 1;
         }
-        if ( fread(file_contents, file_size, 1, fp) != 1 ) {
+
+        actread = fread(file_contents, sizeof(char), file_size, fp);
+        if (!actread) {
                 fprintf(stderr, "Unable to read content of %s\n", filename);
                 fclose(fp);
                 free(file_contents);
                 return 1;
         }
+        file_contents[actread] = 0;
         fclose(fp);
 
         printf("%s\n", file_contents);
@@ -166,7 +194,7 @@ int main(int argc, char** argv)
 
         json = (json_char*)file_contents;
 
-        value = json_parse(json,file_size);
+        value = jparse(json,file_size);
 
         if (value == NULL) {
                 fprintf(stderr, "Unable to parse data\n");
@@ -176,7 +204,7 @@ int main(int argc, char** argv)
 
         process_value(value, 0);
 
-        json_value_free(value);
+        jfree(value);
         free(file_contents);
         return 0;
 }
